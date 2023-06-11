@@ -1,0 +1,90 @@
+#include<iostream>
+#include<stack>
+template<typename T>
+class linkedlist
+{
+private:
+	struct node
+	{
+		T data;
+		node* next;
+	};
+public:
+	node* head = nullptr;
+	void insert(T n)
+	{
+		if (head == NULL)
+		{
+			node* temp = new node;
+			temp->next = head;
+			temp->data = n;
+			head = temp;
+		}
+		else
+		{
+			node* temp = new node;
+			node* temp0 = head;
+			while (temp0->next != nullptr)
+			{
+				temp0 = temp0->next;
+			}
+			temp0->next = temp;
+			temp->next = nullptr;
+			temp->data = n;
+		}
+	}
+	void print()
+	{
+		node* temp = head;
+		while (temp != NULL)
+		{
+			std::cout << temp->data << std::endl;
+			temp = temp->next;
+		}
+	}
+	void reverse()
+	{
+		node* temp = head;
+		std::stack<node*>s;
+		while (temp != NULL)
+		{
+			s.push(temp);
+			temp = temp->next;
+		}
+		head = temp;
+		while (s.size() != 0)
+		{
+			if (head == NULL)
+			{
+				node* temp0 = s.top();
+				head = temp0;
+				s.pop();
+			}
+			else
+			{
+				node* temp1 = head;
+				while (temp1->next != nullptr)
+				{
+					temp1 = temp1->next;
+				}
+				node* temp0 = s.top();
+				temp1->next = temp0;
+				temp0->next = nullptr;
+				s.pop();
+			}
+		}
+	}
+};
+int main()
+{
+	linkedlist<int>lnk;
+	lnk.insert(1);
+	lnk.insert(2);
+	lnk.insert(3);
+	lnk.insert(4);
+	lnk.insert(5);
+	lnk.print();
+	std::cout << "!!!!!!!!!!!!!!\n";
+	lnk.reverse();
+	lnk.print();
+}
