@@ -1,0 +1,169 @@
+#include<iostream>
+template<typename T>
+class linkedlist
+{
+public:
+	struct node
+	{
+		T data;
+		node* next;
+	};
+	node* head=nullptr;
+
+	void insert(T n)
+	{
+		node* temp = new node;
+		temp->next = head;
+		head = temp;
+		temp->data = n;
+	}
+
+	void insertpos(T n, size_t pos)
+	{
+		node* temp = head;
+		if (pos == 1)
+		{
+			node* temp = new node;
+			temp->next = head;
+			temp->data = n;
+			head = temp;
+			return;
+		}
+		for (size_t i = 1; i < pos-1; i++)
+		{
+			temp = temp->next;
+		}
+		node* newtemp = new node;
+		newtemp->data = n;
+		newtemp->next = temp->next;
+		temp->next = newtemp;
+	}
+
+	void deletepos(size_t pos)
+	{
+		node* temp0 = head;
+		int count = 0;
+		while (temp0 != NULL)
+		{
+			temp0 = temp0->next;
+			count++;
+		}
+		if (pos == count)
+		{
+			node* temp = head;
+			for (size_t i = 1; i <= pos-2; i++)
+			{
+				temp = temp->next;
+			}
+			node* temp1 = temp->next;
+			temp->next = nullptr;
+			delete temp1;
+			return;
+		}
+		else if (pos == 1)
+		{
+			node* temp = head;
+			head = temp->next;
+			delete temp;
+			return;
+		}
+		else if (pos > count || pos < 1)
+		{
+			std::cout << "Invalid Position\n";
+			return;
+		}
+		else
+		{
+			node* temp = head;
+			for (size_t i = 1; i <= pos-2; i++)
+			{
+				temp = temp->next;
+			}
+			node* temp1 = temp->next;// pos node
+			temp->next = temp1->next; //pos+1 node
+			delete temp1;
+			return;
+		}
+	}
+
+	void reverse()
+	{
+		node* next;
+		node* prev = NULL;
+		node* curr=head;
+		while (curr != NULL)
+		{
+			next = curr->next;
+			curr->next = prev;
+			prev = curr;
+			curr = next;
+		}
+		head = prev;
+	}
+	void print()
+	{
+		node* temp = head;
+		while (temp != nullptr)
+		{
+			std::cout << temp->data << std::endl;
+			temp = temp->next;
+		}
+	}
+	void printrecursive(node* p)
+	{
+		if (p == NULL)
+		{
+			return;
+		}
+		std::cout << p->data << " ";
+		printrecursive(p->next);
+	}
+	void printreverse(node* p)
+	{
+		if (p== NULL)
+		{
+			return;
+		}
+		printreverse(p->next);
+		std::cout << p->data << " ";
+	}
+
+	void recursivereverse(node* p)
+	{
+		if (p->next == NULL)
+		{
+			head = p;
+			return;
+		}
+		recursivereverse(p->next);
+		node* q = p->next;
+		q->next = p;
+		p->next = nullptr;
+	}
+};
+
+int main()
+{
+	linkedlist<int>lnk;
+	lnk.insert(10);
+	lnk.insert(90);
+	lnk.insert(20);
+	lnk.insert(30);
+	//lnk.insertpos(50, 1);
+	//lnk.insertpos(100, 2);
+	lnk.print();
+	std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+	//lnk.deletepos(6);
+	//lnk.deletepos(-1);
+	//lnk.reverse();
+	//lnk.print();
+	//linkedlist<float>lnkf;
+	//lnkf.insert(20.52f);
+	//lnkf.print();
+	//lnk.printrecursive(lnk.head);
+	//std::cout << std::endl;
+	//lnk.printreverse(lnk.head);
+	//lnk.recursivereverse(lnk.head);
+	lnk.printreverse(lnk.head);
+	std::cin.get();
+}
