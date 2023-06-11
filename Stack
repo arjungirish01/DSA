@@ -1,0 +1,67 @@
+#include<iostream>
+template<typename T>
+class stacks
+{
+public:
+	T* stack;
+	size_t top = -1;
+	size_t capacity = 5;
+	size_t s = 0;
+	stacks()
+	{
+		stack = new T[capacity];
+	}
+	void push(T n)
+	{
+		if (capacity==s)
+		{
+			top = capacity - 1;
+			capacity = capacity * 2;
+			T* newstack = new T[capacity];
+			for (size_t i = 0; i < capacity / 2; i++)
+			{
+				newstack[i] = stack[i];
+			}
+			delete[] stack;
+			stack = newstack;
+		}
+		stack[++top] = n;
+		s++;
+	}
+	bool isempty()
+	{
+		if (s == 0)
+			return true;
+		else
+			return false;
+	}
+	void pop()
+	{
+		if (s == 0)
+		{
+			std::cout << "Stack is Empty\n";
+		}
+		top--;
+		s--;
+	}
+	void print()
+	{
+		for (size_t i = 0; i <s; i++)
+			std::cout << stack[i] << std::endl;
+	}
+};
+int main()
+{
+	stacks<int>s;
+	s.push(1);
+	s.push(2);
+	s.push(3);
+	s.push(4);
+	s.push(5);
+	s.push(6);
+	s.print();
+	s.pop();
+	s.print();
+	bool res = s.isempty();
+	std::cin.get();
+}
