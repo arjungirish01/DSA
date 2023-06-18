@@ -1,0 +1,88 @@
+#include<iostream>
+template<typename T>
+class queue
+{
+public:
+	T* q;
+	size_t s=0;
+	size_t capacity=5;
+	size_t rear=-1;
+	size_t front = -1;
+	
+	void push(T n)
+	{
+		if (s == 0)
+		{
+			q = new T[capacity];
+			q[++rear] = n;
+			s++;
+			front++;
+		}
+		else if ((rear+1)%capacity==front) //circular array checking for rear=front
+		{
+			capacity = capacity * 2;
+			T* newq = new T[capacity];
+			for (int i = front; i <= rear; i++)
+			{
+				newq[i] = q[i];
+			}
+			delete q;
+			q = newq;
+			rear = (rear + 1) % capacity;
+			q[rear] = n;
+			s++;
+		}
+		else
+		{
+			rear = (rear + 1) % capacity;
+			q[rear] = n;
+			s++;
+		}
+	}
+
+	void pop()
+	{
+		if (front == -1)
+		{
+			std::cout << "Empty Queue\n";
+		}
+		else if (front == rear)
+		{
+			front = -1;
+			rear = -1;
+			s = 0;
+			delete[] q;
+		}
+		else
+		{
+			front = (front + 1) % capacity;
+			s--;
+		}
+	}
+	void print()
+	{
+		for (size_t i = front; i <= rear; i++)
+			std::cout << q[i] << std::endl;
+	}
+
+	size_t size()
+	{
+		return s;
+	}
+};
+
+int main()
+{
+	queue<int>qu;
+	qu.push(10);
+	qu.push(5);
+	qu.push(15);
+	qu.pop();
+	qu.print();
+	std::cout << "\n!!!!!!!!!!!!!!!!!\n";
+	//qu.pop();
+	qu.push(6);
+	qu.push(8);
+	qu.push(9);
+	qu.print();
+}
