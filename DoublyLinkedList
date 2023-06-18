@@ -1,0 +1,168 @@
+#include"pch.h"
+
+template<typename T>
+class doublelinkedlist
+{
+public:
+	struct node
+	{
+		T data;
+		node* next;
+		node* prev;
+	};
+	node* head =nullptr;
+	size_t count()
+	{
+		size_t c = 0;
+		node* temp = head;
+		while (temp != NULL)
+		{
+			temp = temp->next;
+			c++;
+		}
+		return c;
+	}
+	void insert(T n)
+	{
+		node* temp;
+		temp = head;
+		if ( head== NULL)
+		{
+			node* p = new node;
+			head = p;
+			p->data = n;
+			p->next = nullptr;
+			p->prev=nullptr;
+		}
+		else
+		{
+			temp = new node;
+			temp->next = head;
+			temp->prev = nullptr;
+			head->prev = temp;
+			temp->data = n;
+			head = temp;
+		}
+	}
+	void insertpos(T n,size_t pos)
+	{
+		node* temp = head;
+		if (pos == 1)
+		{
+			node* p = new node;
+			p->next = head;
+			p->prev = nullptr;
+			p->data = n;
+			head = p;
+		}
+		else
+		{
+			for (size_t i = 1; i < pos - 2; i++)
+			{
+				temp = temp->next;
+			}
+			node* temp1 = new node;
+			temp1->next = temp->next;
+			node* temp0 = temp->next;
+			temp->next = temp1;
+			temp0->prev = temp1;
+			temp1->prev = temp;
+			temp1->data = n;
+		}
+
+	}
+	void deletepos(size_t pos)
+	{
+		node* temp = head;
+		if (pos == 1)
+		{
+			head = temp->next;
+			delete temp;
+		}
+		else if (pos == count())
+		{
+			while (temp != NULL)
+			{
+				temp = temp->next;
+			}
+			node* temp0 = temp->prev;
+			temp0->next=nullptr;
+			delete temp;
+		}
+		else
+		{
+			for (size_t i = 1; i < pos-2; i++)
+			{
+				temp = temp->next;
+			}
+			node* temp0 = temp->next;//pos
+			temp->next = temp0->next;
+			node* temp1 = temp0->next;
+			temp1->prev = temp;
+
+		}
+	}
+	void print()
+	{
+		node* temp = head;
+		while (temp != NULL)
+		{
+			std::cout << temp->data << std::endl;
+			temp = temp->next;
+		}
+	}
+	void printreverse()
+	{
+		node* temp = head;
+		while (temp->next != NULL)
+		{
+			temp = temp->next;
+		}
+		while (temp != NULL)
+		{
+			std::cout << temp->data << std::endl;
+			temp = temp->prev;
+		}
+	}
+	void recursiveprint(node* temp)
+	{
+		if (temp == NULL)
+		{
+			return;
+		}
+		std::cout << temp->data << std::endl;
+		recursiveprint(temp->next);
+	}
+
+	void reverserecursiveprint(node* temp)
+	{
+		if (temp == NULL)
+		{
+			return;
+		}
+		recursiveprint(temp->next);
+		std::cout << temp->data <<std::endl;
+	}
+};
+int main()
+{
+	doublelinkedlist<int> dlnk;
+	dlnk.insert(10);
+	dlnk.insert(20);
+	dlnk.insert(30);
+	//dlnk.print();
+	dlnk.insertpos(40, 2);
+	//dlnk.insertpos(50, 1);
+	dlnk.print();
+	std::cout << "!!!!!!!!!!!!!!!!!!\n";
+	dlnk.deletepos(2);
+	//dlnk.deletepos(1);
+	dlnk.print();
+	std::cout << "!!!!!!!!!!!!!!!!!\n";
+	/*dlnk.recursiveprint(dlnk.head);
+	std::cout << "!!!!!!!!!!!!!!!!!\n";
+	dlnk.reverserecursiveprint(dlnk.head);
+	std::cin.get();*/
+	dlnk.printreverse();
+	//dlnk.reverserecursiveprint(dlnk.head);
+}
