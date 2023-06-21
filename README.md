@@ -23,6 +23,8 @@ The repository covers the following data structures:
 - Queue
 - Binary Tree
 - Binary Search Tree
+- AVL Tree
+- Vector
 - Heap
 - Hash Table
 
