@@ -1,0 +1,199 @@
+#include<iostream>
+#include<algorithm>
+#include<queue>
+struct bst
+{
+	int data;
+	bst* left;
+	bst* right;
+};
+std::vector<int>v;
+int findmin(bst* temp);
+bst* getnode(int n)
+{
+	bst* newnode = new bst;
+	newnode->data = n;
+	newnode->left = nullptr;
+	newnode->right = nullptr;
+	return newnode;
+}
+
+bst* insert(bst* &temp, int n)
+{
+	if (temp == nullptr)
+	{
+		temp = getnode(n);
+	}
+	else if (n <= temp->data)
+	{
+		temp->left = insert(temp->left, n);
+	}
+	else
+	{
+		temp->right = insert(temp->right, n);
+	}
+	return temp;
+}
+bool search(bst* temp, int n)
+{
+	if (temp == nullptr)
+		return false;
+	else if (n <= temp->data)
+	{
+		if (temp->data == n)
+			return true;
+		else
+			return search(temp->left, n);
+	}
+	else
+	{
+		if (temp->data == n)
+			return true;
+		else
+			return search(temp->right, n);
+	}
+
+}
+bst* del(bst* temp, int n)
+{
+	if (temp == nullptr)
+		return temp;
+	else
+	{
+		if (n < temp->data)
+			temp->left = del(temp->left, n);
+		else if (n > temp->data)
+			temp->right = del(temp->right, n);
+		else //value found
+		{
+			// case 1: no child
+			if (temp->left == nullptr&&temp->right == nullptr) 
+			{
+				delete temp;
+				temp = nullptr;
+				return temp;
+			}
+			
+			//case 2: 1 child
+			else if (temp->left == nullptr&&temp->right != nullptr)
+			{
+				bst* temp0 = temp;
+				temp = temp->right;
+				delete temp0;
+				return temp;
+			}
+			else if (temp->right == nullptr&&temp->left != nullptr)
+			{
+				bst* temp0 = temp;
+				temp = temp->left;
+				delete temp0;
+				return temp;
+			}
+			//case3: 2 child
+			else
+			{
+				int mindata = findmin(temp->right);
+				temp->data = mindata;
+				temp->right = del(temp->right, mindata);
+			}
+		}
+	}
+}
+int height(bst* temp)
+{
+	if (temp == NULL)
+		return -1;
+	else
+	{
+		/* compute the depth of each subtree */
+		int lDepth = height(temp->left);
+		int rDepth = height(temp->right);
+
+		/* use the larger one */
+		if (lDepth > rDepth)
+			return (lDepth + 1);
+		else
+			return (rDepth + 1);
+	}
+}
+
+void heightiteration(bst* temp)
+{
+	int h = 0;
+	size_t nodecount = 0;
+	std::queue<bst*>qu;
+	qu.push(temp);
+	while (qu.size() != 0)
+	{
+		h++;
+		nodecount = qu.size();
+		while (nodecount > 0)
+		{
+			bst* curr = qu.front();
+			if (curr->left != nullptr)
+				qu.push(curr->left);
+			if (curr->right != nullptr)
+				qu.push(curr->right);
+			qu.pop();
+			nodecount--;
+		}
+	}
+	std::cout << "Height is:" << h - 1 << std::endl;
+}
+
+void print(bst* temp)
+{
+	std::queue<bst*>q;
+	q.push(temp);
+	bst* curr;
+	while (q.size() > 0)
+	{
+		bst* curr = q.front();
+		std::cout << curr->data << std::endl;
+		if (curr->left != nullptr)
+			q.push(curr->left);
+		if (curr->right != nullptr)
+			q.push(curr->right);
+		q.pop();
+	}
+}
+
+int findmin(bst* temp)
+{
+	bst* prev = nullptr;
+	while (temp != nullptr)
+	{
+		prev = temp;
+		temp = temp->left;
+	}
+	return temp->data;
+}
+int main()
+{
+	bst* root = nullptr;
+	insert(root, 10);
+	insert(root, 20);
+	insert(root, 5);
+	insert(root, 9);
+	insert(root, 200);
+	insert(root, 190);
+	auto res1 = search(root, 20);
+	if (res1)
+		std::cout << "Found\n";
+	else
+		std::cout << "Not Found\n";
+	//del(root, 200);
+	auto res = search(root, 200);
+	if (res)
+		std::cout << "Found\n";
+	else
+		std::cout << "Not Found\n";
+	auto r = height(root);
+	std::cout << r << std::endl;
+	heightiteration(root);
+	print(root);
+	//inorder(root);
+	isbst(root);
+	del(root,9);
+	print(root);
+}
