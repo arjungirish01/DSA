@@ -1,0 +1,241 @@
+#include"pch.h"
+
+class edge {
+public:
+	int destinationid;
+	int weight;
+	edge(int des,int wt) 
+	:destinationid(des),weight(wt){
+
+	}
+	void setdata(int destid,int wt) {
+		destinationid = destid;
+		weight = wt;
+	}
+	void setdestinationid(int id){
+		destinationid = id;
+	}
+	void setweight(int wt) {
+		weight = wt;
+	}
+	int getdestinationid() const {
+		return destinationid;
+	}
+	int getweight() const {
+		return weight;
+	}
+};
+
+class vertex {
+public:
+	int stateid;
+	std::string statename;
+	std::list<edge>edgelist;
+	vertex(){
+		stateid = -1;
+		statename = "unknown";
+	}
+	vertex(int id,std::string name)
+		:stateid(id),statename(name){}
+	void setdata(int id,std::string name) {
+		stateid = id;
+		statename = name;
+	}
+	void setstateid(int id) {
+		stateid = id;
+	}
+	void setstatename(std::string name) {
+		statename = name;
+	}
+	int getstateid() const {
+		return stateid;
+	}
+	std::string getstatename() const {
+		return statename;
+	}
+	const std::list<edge>& getedgelist() const {
+		return edgelist;
+	}
+};
+
+class graph {
+public:
+	std::vector<vertex>vertices;
+	vertex* ifstateid(int id) {
+		for (auto& i : vertices) {
+			if (i.stateid == id)
+				return &i;
+		}
+		return nullptr;
+	}
+	vertex getvertex(int id) {
+		for (auto i : vertices) {
+			if (i.stateid == id) {
+				return i;
+			}
+		}
+	}
+	bool ifedgelist(const vertex& v,int id) {
+		if (v.edgelist.empty()) {
+			return false;
+		}
+		else {
+
+			for (const auto& i : v.edgelist) {
+				if (i.destinationid == id)
+					return true;
+			}
+		}
+		return false;
+	}
+	void addvertex(vertex& v) {
+		if (vertices.size() == 0) {
+			vertices.push_back(v);
+			std::cout << "Data:" << v.getstatename() << " added" << std::endl;
+		}
+		else {
+				if (ifstateid(v.stateid))
+					std::cout << "Vertex with id "<<v.getstateid()<<" already exists\n";
+				else {
+					vertices.push_back(v);
+					std::cout << "Data:"<<v.getstatename()<<" added" << std::endl;
+				}
+			}
+	}
+	void addedge(int startid,int destid,int wt) {
+		vertex* startvertex = ifstateid(startid);
+		vertex* destvertex = ifstateid(destid);
+		if (startvertex && destvertex) {
+			if (ifedgelist(*startvertex,destid)) {
+				std::cout <<"Edge already present\n";
+			}
+			else {
+				edge e1(destid, wt);
+				edge e2(startid, wt);
+				startvertex->edgelist.emplace_back(e1);
+				destvertex->edgelist.emplace_back(e2);
+				std::cout <<"Edge Successfully added\n ";
+			}
+		}
+		else {
+			std::cout <<"Vertex doesnot exist\n";
+		}
+	}
+	void print() {
+		for (const auto& v : vertices) {
+			std::cout << "Vertex ID: " << v.stateid << ", Name: " << v.statename << std::endl;
+			std::cout << "Edges:--> ";
+
+			if (v.edgelist.empty()) {
+				std::cout << "None";
+			}
+			else {
+				for (const auto& e : v.edgelist) {
+					std::cout << "(" << e.destinationid << ", Weight: " << e.weight << ")";
+				}
+				std::cout << "\n";
+			}
+
+			std::cout << std::endl;
+		}
+	}
+	void updateedge(int start,int dest,int newweight) {
+		vertex* verstart = ifstateid(start);
+		vertex* verdest = ifstateid(dest);
+		if (verstart == nullptr || verdest == nullptr)
+			std::cout << "No vertex found\n";
+		else {
+
+			for (auto& i : verstart->edgelist)
+			{
+				if (i.destinationid == dest)
+					i.setweight(newweight);
+				std::cout << "data changed\n";
+			}
+			for (auto& i : verdest->edgelist) {
+				if (i.destinationid == start)
+					i.setweight(newweight);
+				std::cout << "data changed\n";
+			}
+		}
+	}
+
+	void updatevertex(int id, std::string name) {
+		vertex* verstart = ifstateid(id);
+		if (verstart == nullptr)
+			std::cout << "No vertex found\n";
+		else {
+			verstart->setstatename(name);
+			std::cout << "Data successfully updated\n";
+		}
+	}
+
+	void deledge(int start, int dest) {
+		vertex* verstart = ifstateid(start);
+		vertex* verdest = ifstateid(dest);
+		if (verstart == nullptr || verdest == nullptr)
+			std::cout << "No vertex found\n";
+		else {
+
+			for (auto i=verstart->edgelist.begin();i!=verstart->edgelist.end();i++)
+			{
+				if (i->destinationid == dest) {
+					verstart->edgelist.erase(i);
+					std::cout << "Edge deleted\n";
+					break;
+				}
+			}
+			for (auto i = verdest->edgelist.begin(); i != verdest->edgelist.end(); i++) {
+				if (i->destinationid == start) {
+					verdest->edgelist.erase(i);
+					std::cout << "Edge Deleted\n";
+					break;
+				}
+			}
+		}
+	}
+
+	void delvertex(int id) {
+		vertex* verstart = ifstateid(id);
+		if (verstart == nullptr)
+			std::cout << "No vertex Found\n";
+		else {
+			for (auto& i : vertices) {
+				for (auto j = i.edgelist.begin(); j != i.edgelist.end(); j++) {
+					if (j->destinationid == id)
+						i.edgelist.erase(j);
+					break;
+				}
+			}
+			for (auto i = vertices.begin(); i != vertices.end(); i++) {
+				if (i->stateid == id)
+					vertices.erase(i);
+				break;
+			}
+			std::cout << "Vertex successfully deleted\n";
+		}
+		
+	}
+};
+
+int main() {
+	graph g;
+	vertex v1;
+	v1.setdata(0, "kerala");
+	g.addvertex(v1);
+	vertex v2;
+	v2.setdata(1, "mh");
+	g.addvertex(v2);
+	g.addedge(0, 1,2000);
+	vertex v3(2, "goa");
+	g.vertices.push_back(v3);
+	g.addedge(0, 2, 5000);
+	g.print();
+	g.updateedge(0,1,10000);
+	g.updatevertex(0, "Kashmir");
+	g.print();
+	g.deledge(0, 1);
+	g.print();
+	g.delvertex(0);
+	g.print();
+}
