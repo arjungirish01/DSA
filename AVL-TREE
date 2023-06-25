@@ -1,0 +1,168 @@
+#include<iostream>
+#include<queue>
+template<typename T>
+class AVL {
+public:
+	struct node {
+		T data;
+		node* left;
+		node* right;
+	};
+	node* root;
+	AVL()
+		:root(nullptr) {}
+	~AVL() {}
+	void print() {
+		std::queue<node*>q;
+		int count;
+		q.push(root);
+		while (q.size() > 0) {
+			node* temp = q.front();
+			q.pop();
+			std::cout << temp->data << std::endl; 
+			if (temp->left != nullptr)
+				q.push(temp->left);
+			if (temp->right != nullptr)
+				q.push(temp->right);
+		}
+
+	}
+
+	node* getnode(T value) {
+		node* temp = new node;
+		temp->left = nullptr;
+		temp->right = nullptr;
+		temp->data = value;
+		return temp;
+	}
+	int height(node* temp) {
+		int leftheight, rightheight;
+		if (temp == nullptr)
+			return -1;
+		else {
+			leftheight = height(temp->left);
+			rightheight = height(temp->right);
+			return (std::max(leftheight, rightheight) + 1); //maximum height plus current node height
+		}
+	}
+	int getbf(node* temp) {
+		return (height(temp->left) - height(temp->right));
+	}
+	node* leftrotate(node* temp) {
+		node* a = temp->right;
+		node* subtree = a->left;
+		a->left = temp;
+		temp->right = subtree;
+		return a;
+	}
+	node* rightrotate(node* temp) {
+		node* a = temp->left;
+		node* subtree = a->right;
+		a->right = temp;
+		temp->left = subtree;
+		return a;
+	}
+	node* insert(node* temp, T value) {
+		if (temp == nullptr) {
+			temp = getnode(value);
+		}
+		else {
+			if (value < temp->data) {
+				temp->left = insert(temp->left, value);
+			}
+			else if (value > temp->data) {
+				temp->right = insert(temp->right, value);
+			}
+			else {
+				std::cout << "Duplicate Value\n";
+				return temp;
+			}
+		}
+		int bf = getbf(temp);
+		if (bf>1 && value < temp->data) {
+			return rightrotate(temp);
+		}
+		else if (bf>1 && value > temp->data) {
+			temp->left = leftrotate(temp->left);
+			return rightrotate(temp);
+		}
+		else if (bf<-1 && value>temp->data) {
+			return leftrotate(temp);
+		}
+		else if (bf < -1 && value < temp->data) {
+			temp->right = rightrotate(temp->right);
+			return leftrotate(temp);
+		}
+		return temp;
+	}
+	void inorder(node* temp) {
+		if (temp == nullptr)
+			return;
+
+		inorder(temp->left);
+		std::cout << temp->data << " ";
+		inorder(temp->right);
+	}
+	node* findmin(node* temp) {
+		if (temp->left == nullptr)
+			return temp;
+		 findmin(temp->left);
+	}
+	node* delnode(node* temp, T value) {
+		if (temp == nullptr)
+			return temp;
+		else if (value < temp->data)
+			temp->left = delnode(temp->left, value);
+		else if (value > temp->data)
+			temp->right = delnode(temp->right, value);
+		else if (value == temp->data) {
+			if (temp->left != nullptr&&temp->right == nullptr) {
+				node* temp0 = temp->left;
+				delete temp;
+				return temp0;
+			}
+			else if (temp->left == nullptr&&temp->right != nullptr) {
+				node* temp0 = temp->right;
+				delete temp;
+				return temp0;
+			}
+			else if (temp->left == nullptr&&temp->right == nullptr) {
+				delete temp;
+				return nullptr;
+			}
+			else if (temp->right != nullptr&&temp->left != nullptr) {
+				node* min = findmin(temp->right);
+				temp->data = min->data;
+				temp->right=delnode(min, min->data);
+			}
+		}
+		int bf = getbf(temp);
+		if (bf == 2 && getbf(temp->left)>=0) {
+			return rightrotate(temp);
+		}
+		else if (bf == 2 && getbf(temp->left)==-1) {
+			temp->left = leftrotate(temp->left);
+			return rightrotate(temp);
+		}
+		else if (bf == -2 && getbf(temp->right) <= 0) {
+			return leftrotate(temp);
+		}
+		else if (bf == -2 && getbf(temp->right) == -1) {
+			temp->right = rightrotate(temp->right);
+			return leftrotate(temp);
+		}
+		return temp;
+	}
+};
+
+int main() {
+	AVL<int>av;
+	av.root=av.insert(av.root, 40);
+	av.root = av.insert(av.root, 15);
+	av.root = av.insert(av.root, 45);
+	av.root = av.insert(av.root, 80);
+	av.root = av.insert(av.root, 24);
+	av.root = av.insert(av.root, 30);
+	av.delnode(av.root, 24);
+	av.print();
+}
