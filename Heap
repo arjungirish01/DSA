@@ -1,0 +1,108 @@
+#include"pch.h"
+template<typename T>
+class heapMin {
+public:
+	T* A;
+	size_t capacity;
+	size_t heapsize;
+	heapMin()
+		:heapsize(0) {
+		A = new T[5]();
+		capacity = 5;
+	}
+	size_t size() {
+		return heapsize;
+	}
+	size_t parent(size_t i) {
+		int r=(i - 1) / 2;
+		return r;
+	}
+	size_t left(size_t i) {
+		return(2 * i + 1);
+	}
+	size_t right(size_t i) {
+		return(2 * i + 2);
+	}
+	void swap(T& a, T& b) {
+		T temp = a;
+		a = b;
+		b = temp;
+	}
+	void insert(T value) {
+		if (capacity == heapsize) {
+			std::cout << "Heap Overflow\n";
+			return;
+		}
+		heapsize++;
+		size_t i = heapsize - 1;
+		A[i] = value;
+		while (i != 0 && A[i] < A[parent(i)]) {
+			swap(A[i], A[parent(i)]);
+			i = parent(i);
+		}
+	}
+	void heapify(size_t i) {
+		size_t smallest = i;
+		size_t leftchild=left(i);
+		size_t rightchild=right(i);
+		if (leftchild < heapsize&&A[leftchild] < A[smallest])
+			smallest = leftchild;
+		if (rightchild < heapsize&&A[rightchild] < A[smallest])
+			smallest = rightchild;
+		if (smallest != i) {
+			std::swap(A[i], A[smallest]);
+			heapify(smallest);
+		}
+	}
+	T extractMin() {
+		if (heapsize <= 0) {
+			std::cout << "Empty Heap\n";
+			return INT_MAX;
+		}
+		if (heapsize == 1) {
+			heapsize--;
+			return A[0];
+		}
+		T root = A[0];
+		A[0] = A[heapsize - 1];
+		heapsize--;
+		heapify(0);
+		return root;
+	}
+	T getMin() {
+		return A[0];
+	}
+	void decreasekey(size_t i,T minval) {
+		A[i] = minval;
+	}
+	void del(size_t i) {
+		decreasekey(i, INT_MIN);
+		while (i != 0 && A[i] < A[parent(i)]) {
+			std::swap(A[i], A[parent(i)]);
+			i = parent(i);
+		}
+		extractMin();
+	}
+	int height() {
+		return(ceil(log2(heapsize + 1)) - 1);
+	}
+	void print() {
+		for (size_t i = 0; i < heapsize; i++)
+			std::cout << A[i] << std::endl;
+	}
+};
+
+int main() {
+	heapMin<int>h;
+	h.insert(5);
+	h.insert(8);
+	h.insert(20);
+	h.insert(2);
+	//std::cout << h.size();
+	h.print();
+	std::cout << "!!!!!!!!!!!!\n";
+	int y = h.extractMin();
+	h.insert(2);
+	h.del(3);
+	h.print();
+}
