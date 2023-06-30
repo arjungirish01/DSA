@@ -1,0 +1,46 @@
+#include<iostream>
+#include<array>
+
+void merge(int arr[], int l, int m, int r) {
+	int i = l;
+	int j = m + 1;
+	int k = l;
+	int temp[10];
+	while (i <= m && j <= r) {
+		if (arr[i] < arr[j]) {
+			temp[k] = arr[i];
+			i++; k++;
+		}
+		else{
+			temp[k] = arr[j];
+			k++; j++;
+		}
+	}
+	while (i <= m) {
+		temp[k] = arr[i];
+		i++; k++;
+	}
+	while (j <= r) {
+		temp[k] = arr[j];
+		j++; k++;
+	}
+	for (int n = l; n <= r; n++) {
+		arr[n] = temp[n];
+	}
+}
+
+void mergesort(int arr[], int l, int r) {
+	if (l < r) {
+		int m = (l + r) / 2;
+		mergesort(arr, l, m);
+		mergesort(arr, m + 1, r);
+		merge(arr, l, m, r);
+	}
+}
+
+int main() {
+	int a[10] = { 1,5,3,0,4,6,8,7,9,2 };
+	mergesort(a, 0, 9);
+	for (int i = 0; i < 10; i++)
+		std::cout << a[i] << " ";
+}
