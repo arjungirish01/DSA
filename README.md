@@ -24,6 +24,10 @@ The repository covers the following data structures:
 - Binary Tree
 - Binary Search Tree
 - AVL Tree
+- Red Black Tree
+- m-way tree
+- B-Tree
+- B+ Tree
 - Vector
 - Heap
 - Hash Table
@@ -33,7 +37,7 @@ The repository covers the following data structures:
 
 The repository introduces several fundamental algorithms, including:
 
-- Sorting algorithms (Bubble Sort, Selection Sort, Insertion Sort)
+- Sorting algorithms (Bubble Sort, Selection Sort, Insertion Sort, Merge Sort, Shell Sort, Counting Sort, etc.)
 - Searching algorithms (Linear Search, Binary Search)
 - Recursion
 - Graph traversal algorithms (Breadth-First Search, Depth-First Search)
