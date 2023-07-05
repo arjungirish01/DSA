@@ -21,6 +21,7 @@ The repository covers the following data structures:
 - Linked List
 - Stack
 - Queue
+- Dequeue
 - Binary Tree
 - Binary Search Tree
 - AVL Tree
@@ -28,6 +29,7 @@ The repository covers the following data structures:
 - m-way tree
 - B-Tree
 - B+ Tree
+- Graph
 - Vector
 - Heap
 - Hash Table
