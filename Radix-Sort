@@ -1,0 +1,44 @@
+#include<iostream>
+
+void countsort(int arr[], int s, int div) {
+	int* outputarr = new int[s];
+	int countarr[10]; //0-9 digits
+	for (int i = 0; i < 10; i++)
+		countarr[i] = 0;
+	for (int i = 0; i < s; i++) {
+		++countarr[arr[i] / div % 10]; //getting digit by digit and mapping digit to index
+	}
+	for (int i = 1; i < 10; i++) {
+		countarr[i] = countarr[i] + countarr[i - 1]; //prefix sum
+	}
+	for (int i = s - 1; i >= 0; i--) { //doing in reverse order so that sorting happens correctly
+		outputarr[--countarr[arr[i] / div % 10]] = arr[i]; 
+	}
+	for (int i = 0; i < s; i++) {
+		arr[i] = outputarr[i];
+	}
+	delete[] outputarr;
+}
+
+int getmax(int arr[],int s) {
+	int max = arr[0];
+	for (int i = 1; i < s; i++) {
+		if (max < arr[i])
+			max = arr[i];
+	}
+	return max;
+}
+
+void radixsort(int arr[], size_t s) {
+	int max = getmax(arr,s);
+	for (int div = 1;(max / div) > 0; div *= 10) {
+		countsort(arr, s, div);
+	}
+}
+
+int main() {
+	int a[10] = { 100,2,500,21,48,78,96,268,65,104 };
+	radixsort(a, 10);
+	for (int i = 0; i < 10; i++)
+		std::cout << a[i] << " ";
+}
