@@ -1,0 +1,31 @@
+#include<iostream>
+#include<algorithm>
+
+int partition(int arr[], int l, int r) {
+	int pivot = arr[r];
+	int pindex = l;
+	for (int i = l; i < r; i++) {
+		if (arr[i] <= pivot)
+		{
+			std::swap(arr[pindex], arr[i]);
+			pindex++;
+		}
+	}
+	std::swap(arr[pindex], arr[r]);
+	return pindex;
+}
+
+void quicksort(int arr[], int l, int r) {
+	if (l < r) {
+		int p = partition(arr, l, r);
+		quicksort(arr, l, p - 1);
+		quicksort(arr, p + 1, r);
+	}
+}
+
+int main() {
+	int a[10] = { 1,5,2,4,8,9,7,6,3,0 };
+	quicksort(a, 0, 9);
+	for (int i = 0; i < 10; i++)
+		std::cout << a[i] << " ";
+}
