@@ -1,0 +1,117 @@
+#include <iostream>
+
+template<typename T>
+class dequeue {
+public:
+	size_t capacity;
+	T* queue;
+	size_t front;
+	size_t rear;
+
+	dequeue() : capacity(5), queue(new T[capacity]), front(-1), rear(-1) {}
+
+	~dequeue() {
+		delete[] queue;
+	}
+
+	void enqueuefront(T n) {
+		if (front == -1 && rear == -1) {
+			front = rear = 0;
+			queue[0] = n;
+		}
+		else if (front == (rear + 1) % capacity) {
+			std::cout << "Dequeue Full\n";
+		}
+		else if (front == 0 && rear == capacity - 1) {
+			std::cout << "Dequeue is full\n";
+		}
+		else if (front == 0) {
+			front = capacity - 1;
+			queue[front] = n;
+		}
+		else {
+			front = (front - 1) % capacity;
+			queue[front] = n;
+		}
+	}
+
+	void enqueuerear(T n) {
+		if (front == -1 && rear == -1) {
+			front = rear = 0;
+			queue[0] = n;
+		}
+		else if (front == 0 && rear == capacity - 1) {
+			std::cout << "Rear is full\n";
+		}
+		else if (front == (rear + 1) % capacity) {
+			std::cout << "Dequeue is Full\n";
+		}
+		else if (rear == capacity - 1) {
+			rear = 0;
+			queue[rear] = n;
+		}
+		else {
+			rear = (rear + 1) % capacity;
+			queue[rear] = n;
+		}
+	}
+
+	void dequeuefront() {
+		if (front == -1 && rear == -1) {
+			std::cout << "Empty Dequeue\n";
+		}
+		else if (front == rear) {
+			front = rear = -1;
+		}
+		else {
+			front = (front + 1) % capacity;
+		}
+	}
+
+	void dequeuerear() {
+		if (rear == -1 && front == -1) {
+			std::cout << "Empty Dequeue\n";
+		}
+		else if (front == rear) {
+			front = rear = -1;
+		}
+		else {
+			rear = (rear - 1 + capacity) % capacity;
+		}
+	}
+
+	T getrear() {
+		return queue[rear];
+	}
+
+	T getfront() {
+		return queue[front];
+	}
+
+	void print() {
+		if (front == -1 && rear == -1) {
+			std::cout << "Empty Dequeue\n";
+		}
+		else {
+			size_t i = front;
+			while (i != rear) {
+				std::cout << queue[i] << " ";
+				i = (i + 1) % capacity;
+			}
+			std::cout << queue[rear] << std::endl;
+		}
+	}
+};
+
+int main() {
+	dequeue<int> d;
+	d.enqueuefront(5);
+	d.enqueuefront(10);
+	d.enqueuerear(20);
+	d.enqueuerear(35);
+	d.dequeuefront();
+	d.dequeuerear();
+	std::cout << "!!!!!!!!!!!!!!!!!!!!\n";
+	d.print();
+	return 0;
+}
