@@ -1,0 +1,22 @@
+#include<iostream>
+#include<algorithm>
+
+void shellsort(int arr[], int s) {
+	for (int gap = s / 2; gap > 0; gap /= 2) {
+		for (int j = gap; j < s; j++) {
+			int temp = arr[j];
+			int i = 0;
+			for (i = j; i >= gap && arr[i - gap] > temp; i -= gap) {
+				std::swap(arr[i], arr[i - gap]);
+			}
+			//arr[i] = temp;
+		}
+	}
+}
+
+int main() {
+	int a[10] = { 87,200,69,10,52,789,1,49,0,26 };
+	shellsort(a, 10);
+	for (int i = 0; i < 10; i++)
+		std::cout << a[i] << " ";
+}
