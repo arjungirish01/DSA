@@ -22,6 +22,7 @@ The repository covers the following data structures:
 - Stack
 - Queue
 - Dequeue
+- Disjoint Set
 - Binary Tree
 - Binary Search Tree
 - AVL Tree
@@ -43,6 +44,7 @@ The repository introduces several fundamental algorithms, including:
 - Searching algorithms (Linear Search, Binary Search)
 - Recursion
 - Graph traversal algorithms (Breadth-First Search, Depth-First Search)
+- Graph Theory (Prim's minimum spanning, Kruskal's minimum spanning, Dijkstra's)
 
 Please note that this repository is constantly evolving as I continue to learn. The contents may be updated, modified, or even removed to ensure a better approach and cleaner code. I appreciate your understanding in this regard. Happy coding and keep learning! :)
 
