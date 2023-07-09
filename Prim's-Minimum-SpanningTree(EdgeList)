@@ -1,0 +1,86 @@
+#include<iostream>
+#include<vector>
+
+#define v 6
+
+
+struct edgelist {
+	int destination;
+	int weight;
+	edgelist(int dest,int wt)
+		:destination(dest),weight(wt){}
+};
+
+struct vertex {
+	std::vector<edgelist> edges;
+};
+
+int findminvertex(std::vector<int> value, std::vector<bool> setmst) {
+	int min = INT_MAX;
+	int vertex;
+	for (int i = 0; i < v; i++) {
+		if (value[i] < min && setmst[i] == false) {
+			min = value[i];
+			vertex = i;
+		}
+	}
+	return vertex;
+}
+
+void buildmst(std::vector<vertex>& graph) {
+	int parent[v];
+	std::vector<int> value(v, INT_MAX);
+	std::vector<bool> setmst(v, false);
+	value[0] = 0;
+	parent[0] = -1;
+
+	for (int i = 0; i < v - 1; i++) {
+		int u = findminvertex(value, setmst);
+		setmst[u] = true;
+		for (auto edges : graph[u].edges) {
+			int j = edges.destination;
+			if (setmst[j] == false && edges.weight < value[j]) {
+				value[j] = edges.weight;
+				parent[j] = u;
+			}
+		}
+	}
+
+	// Print MST
+	for (int i = 1; i < v; i++) {
+		std::cout << parent[i] << "-->" << i << " wt:" << value[i];
+		std::cout << "\n";
+	}
+}
+
+
+int main() {
+	std::vector<vertex> graph(v);
+
+	graph[0].edges.emplace_back(1, 4);
+	graph[0].edges.emplace_back(2, 6);
+
+	graph[1].edges.emplace_back(0, 4);
+	graph[1].edges.emplace_back(2, 6);
+	graph[1].edges.emplace_back(3, 3);
+	graph[1].edges.emplace_back(4, 4);
+
+	graph[2].edges.emplace_back(0, 6);
+	graph[2].edges.emplace_back(1, 6);
+	graph[2].edges.emplace_back(3, 1);
+	graph[2].edges.emplace_back(4, 8);
+
+	graph[3].edges.emplace_back(1, 3);
+	graph[3].edges.emplace_back(2, 1);
+	graph[3].edges.emplace_back(4, 2);
+	graph[3].edges.emplace_back(5, 3);
+
+	graph[4].edges.emplace_back(1, 4);
+	graph[4].edges.emplace_back(2, 8);
+	graph[4].edges.emplace_back(3, 2);
+	graph[4].edges.emplace_back(5, 7);
+
+	graph[5].edges.emplace_back(3, 3);
+	graph[5].edges.emplace_back(4, 7);
+	buildmst(graph);
+}
