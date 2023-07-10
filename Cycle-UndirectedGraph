@@ -1,0 +1,44 @@
+#include<iostream>
+#include<vector>
+#include<utility>
+
+#define v 5
+std::vector<int> djset(v,-1);
+int s = 0;
+int find(int n) {
+	if (djset[n] == -1)
+		return n;
+	find(djset[n]);
+}
+
+void unionp(int x, int y) {
+	int start = find(x);
+	int dest = find(y);
+	djset[dest] = start;
+}
+
+void disjointset(std::vector<std::pair<int,int>> vec) {
+	int start;
+	int dest;
+	for (auto i : vec) {
+		start = find(i.first);
+		dest = find(i.second);
+		if (start == dest) {
+			std::cout << "Cylcle detected\n";
+			return;
+		}
+		else {
+			unionp(i.first, i.second);
+		}
+	}
+	std::cout << "No cycle detected\n";
+}
+
+int main() {
+	std::vector<std::pair<int,int>> edges;
+	edges.emplace_back(1, 2);
+	edges.emplace_back(2, 3);
+	edges.emplace_back(3, 4);
+	edges.emplace_back(1, 4);
+	disjointset(edges);
+}
