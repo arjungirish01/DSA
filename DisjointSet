@@ -1,0 +1,78 @@
+#include<iostream>
+#include<algorithm>
+class disjoint {
+public:
+	int size;
+	struct node {
+		int parent;
+		int rank;
+	};
+	node* arr;
+	disjoint() {
+		arr = new node[10];
+		for (int i=0 ; i < 10;i++) {
+			arr[i].parent = -1;
+			arr[i].rank = 0;
+		}
+		size = 0;
+	}
+	void insert(int val, int par) {
+		if (size >= 9) {
+			std::cout << "Set Full\n";
+		}
+		else {
+			int v = find(par);
+			if (v == par) {
+				arr[val].parent = par;
+				size++;
+				arr[par].rank++;
+			}
+			else {
+				arr[val].parent = par;
+				size++;
+				arr[v].rank++;
+				arr[par].rank++;
+			}
+		}
+	}
+	int find(int var) {
+		if (arr[var].parent == -1)
+			return var;
+		arr[var].parent = find(arr[var].parent);
+	}
+
+	void unionp(int st, int dest) {
+		int n = find(st);
+		int v = find(dest);
+		if (arr[n].rank > arr[v].rank) {
+			arr[v].parent = n;
+		}
+		else if(arr[n].rank<arr[v].rank {
+			arr[n].parent = v;
+		}
+		else {
+			arr[n].parent = v;
+			arr[n].rank++;
+		}
+	}
+	void iscyclic(int a, int b) {
+		if (find(a) == find(b))
+			std::cout << "Cyclic|same set\n";
+		else
+			std::cout << "Not Cyclic\n";
+	}
+};
+
+int main() {
+	disjoint d;
+	d.insert(3, 2);
+	d.insert(2, 1);
+	d.insert(4, 5);
+	d.insert(5, 6);
+	d.insert(7, 5);
+	d.insert(8, 4);
+	d.iscyclic(3, 2);
+	d.iscyclic(4, 2);
+	d.unionp(3, 6);
+	std::cout << d.find(2);
+}
