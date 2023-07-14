@@ -164,5 +164,6 @@ int main() {
 	av.root = av.insert(av.root, 24);
 	av.root = av.insert(av.root, 30);
 	av.delnode(av.root, 24);
+	av.root=av.insert(av.root,90);
 	av.print();
 }
