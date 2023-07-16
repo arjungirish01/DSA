@@ -1,0 +1,107 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#define v 6
+struct edges {
+	int source;
+	int destination;
+	int weight;
+	edges(int s, int d, int wt) {
+		source = s;
+		weight = wt;
+		destination = d;
+	}
+};
+struct node {
+	int parent;
+	int rank;
+};
+node arr[v];
+
+bool comparator(edges e1, edges e2) {
+	return e1.weight < e2.weight;
+}
+
+std::vector<edges>formst;
+int find(int var) {
+	if (arr[var].parent == -1)
+		return var;
+	return arr[var].parent = find(arr[var].parent);
+}
+
+void unionp(int src, int dest) {
+	int s = find(src);
+	int d = find(dest);
+	if (s> d) {
+		arr[d].parent = s;
+	}
+	else if(s<d){
+		arr[s].parent = d;
+	}
+	else {
+		arr[s].parent = d;
+		arr[d].rank++;
+	}
+}
+
+void iscyclic(std::vector<edges> edgelist) {
+	for (auto i : edgelist) {
+		int s = find(i.source);
+		int d = find(i.destination);
+		if (s == d) {
+			std::cout << "Cycle Detected\n";
+			return;
+		}
+	}
+}
+
+void mst(std::vector<edges> edgelist) {
+	std::sort(edgelist.begin(), edgelist.end(), comparator);
+	int i = 0, j = 0;
+	while (i < v - 1 && j < edgelist.size()) {
+
+		int s = find(edgelist[j].source);
+		int d = find(edgelist[j].destination);
+		if (s == d) {
+			continue;
+			j++;
+		}
+		else {
+			formst.emplace_back(edgelist[j]);
+			j++;
+			i++;
+			}
+	}
+}
+void disjointset(std::vector<edges> vec) {
+	for (int i = 0; i < v; i++) {
+		arr[i].parent = -1;
+		arr[i].rank = 0;
+	}
+	for (auto i : vec) {
+		int s = find(i.source);
+		int d = find(i.destination);
+		if (s != d) {
+			unionp(i.source, i.destination);
+		}
+	}
+}
+void print() {
+	for (auto i : formst)
+		std::cout << i.source << "-->" << i.destination << std::endl;
+}
+int main() {
+	std::vector<edges>edgelist;
+	edgelist.emplace_back(0, 2, 2);
+	edgelist.emplace_back(2, 3, 2);
+	edgelist.emplace_back(4, 5, 3);
+	edgelist.emplace_back(3, 5, 4);
+	edgelist.emplace_back(0, 1, 1);
+	edgelist.emplace_back(1, 3, 1);
+	edgelist.emplace_back(2, 4, 1);
+	edgelist.emplace_back(3, 4, 2);
+	edgelist.emplace_back(1, 2, 3);
+	edgelist.emplace_back(1, 4, 3);
+	mst(edgelist);
+	print();
+}
