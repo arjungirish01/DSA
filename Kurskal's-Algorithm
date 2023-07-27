@@ -1,38 +1,46 @@
 #include<iostream>
 #include<vector>
 #include<algorithm>
+#include<list>
+
 #define v 6
 struct edges {
 	int source;
 	int destination;
 	int weight;
-	edges(int s, int d, int wt) {
+	edges(int s, int d, int w)
+	{
 		source = s;
-		weight = wt;
+		destination = d;
+		weight = w;
+	}
+	edges(int s, int d) {
+		source = s;
 		destination = d;
 	}
 };
+
 struct node {
 	int parent;
 	int rank;
 };
 node arr[v];
-
 bool comparator(edges e1, edges e2) {
 	return e1.weight < e2.weight;
 }
 
 std::vector<edges>formst;
+
 int find(int var) {
 	if (arr[var].parent == -1)
 		return var;
-	return arr[var].parent = find(arr[var].parent);
+	return arr[var].parent = find(arr[var].parent); //path compression
 }
 
 void unionp(int src, int dest) {
 	int s = find(src);
 	int d = find(dest);
-	if (s> d) {
+	if (s> d) {			// updating parent and rank
 		arr[d].parent = s;
 	}
 	else if(s<d){
@@ -44,64 +52,48 @@ void unionp(int src, int dest) {
 	}
 }
 
-void iscyclic(std::vector<edges> edgelist) {
-	for (auto i : edgelist) {
-		int s = find(i.source);
-		int d = find(i.destination);
-		if (s == d) {
-			std::cout << "Cycle Detected\n";
-			return;
-		}
-	}
-}
 
-void mst(std::vector<edges> edgelist) {
-	std::sort(edgelist.begin(), edgelist.end(), comparator);
+void mst(std::vector<edges> graph) {
+	std::sort(graph.begin(), graph.end(), comparator);
+	formst.clear();
 	int i = 0, j = 0;
-	while (i < v - 1 && j < edgelist.size()) {
+	while (i < v - 1 && j < graph.size()) {
 
-		int s = find(edgelist[j].source);
-		int d = find(edgelist[j].destination);
+		int s = find(graph[j].source);
+		int d = find(graph[j].destination);
 		if (s == d) {
 			continue;
 			j++;
 		}
 		else {
-			formst.emplace_back(edgelist[j]);
+			formst.emplace_back(graph[j].source,graph[j].destination);
+			unionp(graph[j].source, graph[j].destination);
 			j++;
 			i++;
 			}
 	}
 }
-void disjointset(std::vector<edges> vec) {
-	for (int i = 0; i < v; i++) {
-		arr[i].parent = -1;
-		arr[i].rank = 0;
-	}
-	for (auto i : vec) {
-		int s = find(i.source);
-		int d = find(i.destination);
-		if (s != d) {
-			unionp(i.source, i.destination);
-		}
-	}
-}
+
 void print() {
 	for (auto i : formst)
 		std::cout << i.source << "-->" << i.destination << std::endl;
 }
 int main() {
-	std::vector<edges>edgelist;
-	edgelist.emplace_back(0, 2, 2);
-	edgelist.emplace_back(2, 3, 2);
-	edgelist.emplace_back(4, 5, 3);
-	edgelist.emplace_back(3, 5, 4);
-	edgelist.emplace_back(0, 1, 1);
-	edgelist.emplace_back(1, 3, 1);
-	edgelist.emplace_back(2, 4, 1);
-	edgelist.emplace_back(3, 4, 2);
-	edgelist.emplace_back(1, 2, 3);
-	edgelist.emplace_back(1, 4, 3);
-	mst(edgelist);
+	for (int i = 0; i < v; i++) {
+		arr[i].parent = -1;
+	}
+	std::vector<edges>graph;
+	graph.emplace_back(0, 1, 2);
+	graph.emplace_back(0, 2, 6);
+	graph.emplace_back(1, 2, 6);
+	graph.emplace_back(1, 3, 3);
+	graph.emplace_back(1, 4, 4);
+	graph.emplace_back(2, 3, 1);
+	graph.emplace_back(2, 4, 8);
+	graph.emplace_back(3, 5, 3);
+	graph.emplace_back(4, 3, 2);
+	graph.emplace_back(4, 5, 7);
+	graph.emplace_back(5, 3, 3);
+	mst(graph);
 	print();
 }
