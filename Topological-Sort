@@ -20,7 +20,7 @@ struct graph {
 std::stack<int>st;
 
 void dfs(std::vector<vertex>&vertices,int bt, bool visited[]) {
-	
+	visited[bt] = true;
 	for (auto i =vertices[bt].edgelist.begin(); i!=vertices[bt].edgelist.end();i++) {
 		if (!visited[i->destination]) {
 			dfs(vertices,i->destination, visited);
@@ -29,11 +29,10 @@ void dfs(std::vector<vertex>&vertices,int bt, bool visited[]) {
 	st.push(bt);
 }
 
-void maketopo(std::vector<vertex>graph, bool visited[]) {
+void maketopo(std::vector<vertex>&graph, bool visited[]) {
 
 	for (int i = 0; i < graph.size(); i++) {
 		if (!visited[i]) {
-			visited[i] = true;
 			dfs(graph,i, visited);
 		}
 	}
@@ -42,6 +41,7 @@ void maketopo(std::vector<vertex>graph, bool visited[]) {
 int main() {
 	bool arr[5] = { false };
 	graph g;
+	g.vertices.resize(5);
 	g.vertices[0].edgelist.emplace_back(2);
 	g.vertices[0].edgelist.emplace_back(4);
 	g.vertices[1].edgelist.emplace_back(4);
