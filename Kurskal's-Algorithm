@@ -81,6 +81,7 @@ void print() {
 int main() {
 	for (int i = 0; i < v; i++) {
 		arr[i].parent = -1;
+		arr[i].rank = 0;
 	}
 	std::vector<edges>graph;
 	graph.emplace_back(0, 1, 2);
